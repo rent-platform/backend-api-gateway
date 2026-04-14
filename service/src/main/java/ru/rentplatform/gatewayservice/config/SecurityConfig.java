@@ -17,12 +17,18 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/actuator/health").permitAll()
-                        .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/users/**").authenticated()
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/users/test",
+                                "/api/auth/refresh",
+                                "/swagger-ui.html",
+                                "/swagger-ui/**",
+                                "/v3/api-docs/**",
+                                "/actuator/**",
+                                "/error"
+                        ).permitAll()
                         .requestMatchers("/api/catalog/**").permitAll()
-                        .requestMatchers("/api/deals/**").authenticated()
-                        .requestMatchers("/api/communication/**").authenticated()
-                        .requestMatchers("/api/notification/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
