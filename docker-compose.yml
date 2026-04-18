@@ -1,0 +1,46 @@
+services:
+
+  postgres:
+    image: postgres:17
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: user_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 12345
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  user-service:
+    build:
+      context: ../backend-user-service
+      dockerfile: Dockerfile
+    container_name: user-service
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: user_db
+      PG_USER: postgres
+      PG_PASSWORD: 12345
+    ports:
+      - "8181:8081"
+
+  gateway-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gateway-service
+    depends_on:
+      - user-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8180:8080"
+
+volumes:
+  postgres_data:
