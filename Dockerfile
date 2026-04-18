@@ -1,8 +1,9 @@
-FROM gradle:8.5-jdk21 AS builder
+FROM eclipse-temurin:21-jdk AS builder
 
 WORKDIR /build
 COPY . .
-RUN gradle build -x test
+RUN chmod +x gradlew || true
+RUN ./gradlew build -x test
 
 FROM eclipse-temurin:21-jdk
 
