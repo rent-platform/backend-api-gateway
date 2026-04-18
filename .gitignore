@@ -7,8 +7,6 @@
 # BlueJ files
 *.ctxt
 
-*.pem
-
 # Gradle
 .gradle/
 build/
