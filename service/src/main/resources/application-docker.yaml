@@ -15,6 +15,10 @@ spring:
               uri: http://user-service:8081
               predicates:
                 - Path=/api/users/**
+            - id: catalog-service
+              uri: http://catalog-service:8082
+              predicates:
+                - Path=/api/catalog/**
 
 server:
   port: 8080

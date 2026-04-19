@@ -5,13 +5,13 @@ services:
     container_name: postgres-db
     restart: always
     environment:
-      POSTGRES_DB: user_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: 12345
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
 
   user-service:
     build:
@@ -41,6 +41,23 @@ services:
       SPRING_PROFILES_ACTIVE: docker
     ports:
       - "8180:8080"
+
+  catalog-service:
+    build:
+      context: ../backend-catalog-service
+      dockerfile: Dockerfile
+    container_name: catalog-service
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: catalog_db
+      PG_USER: postgres
+      PG_PASSWORD: 12345
+    ports:
+      - "8182:8082"
 
 volumes:
   postgres_data:
