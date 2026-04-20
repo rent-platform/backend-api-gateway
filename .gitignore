@@ -7,10 +7,6 @@
 # BlueJ files
 *.ctxt
 
-# Gradle
-.gradle/
-build/
-
 # IDE
 .idea/
 *.iml
@@ -19,7 +15,6 @@ build/
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.nar
 *.ear

@@ -16,6 +16,8 @@ public class CorsConfig {
 
         config.setAllowCredentials(true);
         config.setAllowedOrigins(List.of(
+                "http://localhost:8182",
+                "http://localhost:8082",
                 "http://localhost:8181",
                 "http://localhost:8180",
                 "http://localhost:8081",
@@ -24,7 +26,7 @@ public class CorsConfig {
                 "http://localhost:5173"
         ));
         config.setAllowedHeaders(List.of("*"));
-        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "OPTIONS"));
+        config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setExposedHeaders(List.of("Authorization"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
