@@ -19,20 +19,28 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
+
                         .requestMatchers(
-                                "/api/auth/*",
-                                "/api/users/test",
-                                "/api/catalog/categories",
-                                "/api/catalog/items",
-                                "/api/catalog/items/*",
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
                                 "/actuator/**",
                                 "/error"
                         ).permitAll()
-                        .requestMatchers("/api/catalog/**").permitAll()
+
+                        .requestMatchers(
+                                "/api/auth/register",
+                                "/api/auth/login",
+                                "/api/auth/refresh",
+                                "/api/auth/logout",
+                                "/api/users/test"
+                        ).permitAll()
+
+                        .requestMatchers(HttpMethod.GET, "/api/catalog/categories").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/catalog/categories/*").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/catalog/items").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/catalog/items/*").permitAll()
+
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
