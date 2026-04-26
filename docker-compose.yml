@@ -59,5 +59,23 @@ services:
     ports:
       - "8182:8082"
 
+  deal-payment-service:
+    build:
+      context: ../backend-deal-payment-service
+      dockerfile: Dockerfile
+    container_name: deal-payment-service
+    depends_on:
+      - postgres
+      - catalog-service
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: deal_db
+      PG_USER: postgres
+      PG_PASSWORD: 12345
+    ports:
+      - "8183:8083"
+
 volumes:
   postgres_data:

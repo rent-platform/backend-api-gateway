@@ -16,6 +16,13 @@ call gradlew.bat build -x test
 if errorlevel 1 goto :error
 
 echo ==========================================
+echo Building deal-payment-service...
+echo ==========================================
+cd /d ..\backend-deal-payment-service
+call gradlew.bat build -x test
+if errorlevel 1 goto :error
+
+echo ==========================================
 echo Building gateway-service...
 echo ==========================================
 cd /d ..\gateway-service
@@ -32,14 +39,16 @@ echo.
 echo ==========================================
 echo Services started successfully
 echo ==========================================
-echo Gateway:                 http://localhost:8180
-echo User Service Swagger:    http://localhost:8181/swagger-ui/index.html
-echo Catalog Service Swagger: http://localhost:8182/swagger-ui/index.html
-echo Postgres:                localhost:5433
+echo Gateway:                       http://localhost:8180
+echo User Service Swagger:          http://localhost:8181/swagger-ui/index.html
+echo Catalog Service Swagger:       http://localhost:8182/swagger-ui/index.html
+echo Deal Payment Service Swagger:  http://localhost:8183/swagger-ui/index.html
+echo Postgres:                      localhost:5433
 echo.
 echo Useful endpoints:
-echo User API via Gateway:    http://localhost:8180/api/auth/login
-echo Catalog API via Gateway: http://localhost:8180/api/catalog/items
+echo User API via Gateway:          http://localhost:8180/api/auth/login
+echo Catalog API via Gateway:       http://localhost:8180/api/catalog/items
+echo Deal API via Gateway:          http://localhost:8180/api/deals
 echo.
 echo To stop all services:
 echo docker compose down

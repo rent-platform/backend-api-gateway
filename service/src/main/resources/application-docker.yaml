@@ -22,5 +22,10 @@ spring:
               predicates:
                 - Path=/api/catalog/**
 
+            - id: deal-payment-service
+              uri: http://deal-payment-service:8083
+              predicates:
+                - Path=/api/deals/**
+
 server:
   port: 8080

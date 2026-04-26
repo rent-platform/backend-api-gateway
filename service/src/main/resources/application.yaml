@@ -25,7 +25,7 @@ spring:
               predicates:
                 - Path=/api/catalog/**
 
-            - id: deal-service
+            - id: deal-payment-service
               uri: http://localhost:8083
               predicates:
                 - Path=/api/deals/**

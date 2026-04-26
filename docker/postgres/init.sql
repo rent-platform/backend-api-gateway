@@ -1,2 +1,3 @@
 CREATE DATABASE user_db;
 CREATE DATABASE catalog_db;
+CREATE DATABASE deal_db;
