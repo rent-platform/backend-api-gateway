@@ -40,6 +40,11 @@ spring:
               predicates:
                 - Path=/api/reviews/**
 
+            - id: deal-payment-service-complaints
+              uri: http://localhost:8083
+              predicates:
+                - Path=/api/complaints/**
+
             - id: deal-payment-service-webhooks
               uri: http://localhost:8083
               predicates:
