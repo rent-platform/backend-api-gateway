@@ -77,5 +77,22 @@ services:
     ports:
       - "8183:8083"
 
+  communication-service:
+    build:
+      context: ../backend-communication-service
+      dockerfile: Dockerfile
+    container_name: communication-service
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: comm_db
+      PG_USER: postgres
+      PG_PASSWORD: 12345
+    ports:
+      - "8184:8084"
+
 volumes:
   postgres_data:

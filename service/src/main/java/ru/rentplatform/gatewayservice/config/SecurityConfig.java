@@ -50,6 +50,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/api/reviews/users/*/summary").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/reviews/items/*/summary").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/webhooks/**").permitAll()
+                        .requestMatchers("/api/internal/**").permitAll()
 
                         .anyRequest().authenticated()
                 )
