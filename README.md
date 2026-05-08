@@ -1,6 +1,7 @@
 # Gateway Service
 
-`gateway-service` — единая точка входа в микросервисную архитектуру Rent Platform. Он принимает запросы от фронтенда, маршрутизирует их в нужные микросервисы и выполняет проверку JWT для защищённых endpoint'ов.
+`gateway-service` — единая точка входа в микросервисную архитектуру Rent Platform. Принимает запросы от фронтенда, 
+маршрутизирует их в нужные микросервисы и выполняет централизованную проверку JWT.
 
 ## Основной функционал
 
@@ -21,6 +22,38 @@
 - Actuator
 - Docker
 - Docker Compose
+---
+
+## Порты
+
+| Service      | Port |
+|-------------|------|
+| Gateway     | 8080 |
+| User        | 8081 |
+| Catalog     | 8082 |
+| Deal-Payment | 8083 |
+| Communication | 8084 |
+
+---
+
+## Маршрутизация
+
+| Маршрут                  | Сервис              |
+|--------------------------|---------------------|
+| `/api/auth/**`           | user-service        |
+| `/api/users/**`          | user-service        |
+| `/api/admin/**`          | user-service        |
+| `/api/catalog/**`        | catalog-service     |
+| `/api/catalog/admin/**`  | catalog-service     |
+| `/api/deals/**`          | deal-payment-service |
+| `/api/reviews/**`        | deal-payment-service |
+| `/api/complaints/**`     | deal-payment-service |
+| `/api/webhooks/**`       | deal-payment-service |
+| `/api/chats/**`          | communication-service |
+| `/api/internal/chats/**` | communication-service |
+
+---
+
 
 ## Назначение в системе
 
@@ -48,9 +81,18 @@
 - `POST /api/auth/login`
 - `POST /api/auth/refresh`
 - `POST /api/auth/logout`
-- `GET /api/users/test`
+- `GET /api/users/*/public`
+- `GET /api/catalog/categories/**`
+- `GET /api/catalog/items/**`
+- `GET /api/reviews/users/*`
+- `GET /api/reviews/items/*`
+- `GET /api/reviews/users/*/summary`
+- `GET /api/reviews/items/*/summary`
+- `POST /api/webhooks/**`
+- `GET /ws/**` (WebSocket)
 - Swagger endpoints
 - Actuator endpoints
+
 
 ### Защищённые endpoint'ы
 
@@ -70,86 +112,58 @@ JWT обязателен для:
 
 Gateway использует только публичный ключ. Приватный ключ хранится в `user-service`, где и происходит выпуск access token.
 
-## Маршрутизация
-
-На текущем этапе в gateway настроены маршруты для `user-service`.
-
-### Локальный запуск
-
-В локальном профиле маршруты направляются на:
-
-- `http://localhost:8081`
-
-### Docker-запуск
-
-В docker-профиле маршруты направляются на:
-
-- `http://user-service:8081`
-
-Это позволяет корректно работать как локально, так и внутри docker-сети.
-
-## Примеры маршрутов
-
-### User Service
-
-- `/api/auth/**` -> `user-service`
-- `/api/users/**` -> `user-service`
-
-### Будущие маршруты
-
-В проекте также предусмотрены заготовки под другие микросервисы:
-
-- `catalog-service`
-- `deal-service`
-- `comm-service`
-- `notif-service`
-
-На текущем этапе они могут быть описаны в локальном конфиге как будущие маршруты, но основной рабочий сценарий сосредоточен на `user-service`.
+---
 
 ## CORS
 
-В `gateway-service` настроен CORS для работы:
-
-- фронтенда
-- Swagger UI
-- локальной разработки
-- docker-окружения
-
-Разрешаются origin'ы, например:
+Разрешённые origin'ы:
 
 - `http://localhost:3000`
 - `http://localhost:5173`
-- `http://localhost:8081`
-- `http://localhost:8181`
+- `http://localhost:8080` – `http://localhost:8085`
+- `http://localhost:8180` – `http://localhost:8185`
 
-Также разрешены preflight `OPTIONS` запросы.
+Методы: `GET`, `POST`, `PUT`, `DELETE`, `OPTIONS`, `PATCH`
+
+Заголовки: все (`*`)
+
+Preflight `OPTIONS` запросы разрешены для всех маршрутов.
+
+---
 
 ## Конфигурация
 
-### Профили запуска
+### Локальный профиль (`application.yml`)
 
-#### Локальный профиль
-Используется `application.yaml`.
+- server.port: 8080
+- Маршруты → localhost:8081–8084
 
-Обычно:
-- gateway доступен на `8080`
-- user-service доступен на `8081`
+### Docker-профиль (`application-docker.yml`)
 
-#### Docker-профиль
-Используется `application-docker.yaml`.
+- server.port: 8180
+#### Маршруты 
+- user-service:8181, 
+- catalog-service:8182, 
+- deal-payment-service:8183, 
+- communication-service:8184
 
-Обычно:
-- gateway проброшен на `8180`
-- user-service проброшен на `8181`
+---
 
 ## Actuator
 
-Actuator используется для базового мониторинга.
+Открыты endpoint'ы: `health`, `info`
 
-Открыты endpoint'ы:
+---
 
-- `health`
-- `info`
+## Swagger и тестирование
+
+Swagger доступен через gateway для каждого сервиса. Выбрать нужный сервер в OpenAPI-конфигурации.
+
+### URL'ы
+
+Локально:
+- Gateway: `http://localhost:8080`
+- Swagger: `http://localhost:8080/swagger-ui.html`
 
 ## Docker
 
@@ -160,6 +174,9 @@ Actuator используется для базового мониторинга
 - PostgreSQL
 - `user-service`
 - `gateway-service`
+- `catalog-service`
+- `deal-payment-service`
+- `communication-service`
 
 Это позволяет фронтенду и разработчику запускать всю базовую инфраструктуру одной командой.
 
@@ -177,18 +194,6 @@ Actuator используется для базового мониторинга
 - `8181` -> user-service
 - `5433` -> PostgreSQL
 
-## Swagger и тестирование
-
-Swagger обычно открывается через `user-service`, но запросы можно направлять через gateway, выбрав соответствующий server в OpenAPI-конфигурации.
-
-### Примеры URL
-
-Локально:
-- `http://localhost:8080`
-
-В Docker:
-- `http://localhost:8180`
-
 ## Как запускать
 
 ### Локально
@@ -201,10 +206,16 @@ Swagger обычно открывается через `user-service`, но за
 2. Выполнить:
 
 ```bash
+# Запустить все сервисы
+./gradlew bootRun
+
 docker-compose up --build
 ```
 
 После запуска доступны:
 
-- gateway: `http://localhost:8180`
-- user-service: `http://localhost:8181`
+- Gateway: http://localhost:8180
+- User Service: http://localhost:8181
+- Catalog Service: http://localhost:8182
+- Deal-Payment Service: http://localhost:8183
+- Communication Service: http://localhost:8184
