@@ -53,8 +53,12 @@ spring:
             - id: comm-service
               uri: http://localhost:8084
               predicates:
-                - Path=/api/chats/**
                 - Path=/api/messages/**
+
+            - id: comm-service-chats
+              uri: http://localhost:8084
+              predicates:
+                - Path=/api/chats/**
 
             - id: comm-service-internal
               uri: http://localhost:8084
