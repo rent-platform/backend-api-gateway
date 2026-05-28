@@ -23,6 +23,20 @@ call gradlew.bat build -x test
 if errorlevel 1 goto :error
 
 echo ==========================================
+echo Building communication-service...
+echo ==========================================
+cd /d ..\backend-communication-service
+call gradlew.bat build -x test
+if errorlevel 1 goto :error
+
+echo ==========================================
+echo Building audit-service...
+echo ==========================================
+cd /d ..\backend-audit-service
+call gradlew.bat build -x test
+if errorlevel 1 goto :error
+
+echo ==========================================
 echo Building gateway-service...
 echo ==========================================
 cd /d ..\gateway-service
@@ -43,6 +57,8 @@ echo Gateway:                       http://localhost:8180
 echo User Service Swagger:          http://localhost:8181/swagger-ui/index.html
 echo Catalog Service Swagger:       http://localhost:8182/swagger-ui/index.html
 echo Deal Payment Service Swagger:  http://localhost:8183/swagger-ui/index.html
+echo Communication Service Swagger: http://localhost:8184/swagger-ui/index.html
+echo Audit Service Swagger:         http://localhost:8185/swagger-ui/index.html
 echo Postgres:                      localhost:5433
 echo.
 echo Useful endpoints:

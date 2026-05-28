@@ -32,5 +32,40 @@ spring:
               predicates:
                 - Path=/api/reviews/**
 
+            - id: deal-payment-service-complaints
+              uri: http://deal-payment-service:8083
+              predicates:
+                - Path=/api/complaints/**
+
+            - id: deal-payment-service-webhooks
+              uri: http://deal-payment-service:8083
+              predicates:
+                - Path=/api/webhooks/**
+
+            - id: comm-service
+              uri: http://comm-service:8084
+              predicates:
+                - Path=/api/messages/**
+
+            - id: comm-service-chats
+              uri: http://comm-service:8084
+              predicates:
+                - Path=/api/chats/**
+
+            - id: comm-service-internal
+              uri: http://comm-service:8084
+              predicates:
+                - Path=/api/internal/chats/**
+
+            - id: audit-service
+              uri: http://audit-service:8085
+              predicates:
+                - Path=/api/audit/**
+
+            - id: audit-service-internal
+              uri: http://audit-service:8085
+              predicates:
+                - Path=/api/internal/audit**
+
 server:
   port: 8080

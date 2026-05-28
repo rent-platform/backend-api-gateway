@@ -65,10 +65,16 @@ spring:
               predicates:
                 - Path=/api/internal/chats/**
 
-            - id: notif-service
+            - id: audit-service
               uri: http://localhost:8085
               predicates:
-                - Path=/api/notifications/**
+                - Path=/api/audit/**
+
+            - id: audit-service-internal
+              uri: http://localhost:8085
+              predicates:
+                - Path=/api/internal/audit**
+
 
   security:
     oauth2:

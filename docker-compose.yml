@@ -94,5 +94,22 @@ services:
     ports:
       - "8184:8084"
 
+  audit-service:
+    build:
+      context: ../backend-audit-service
+      dockerfile: Dockerfile
+    container_name: audit-service
+    depends_on:
+      - postgres
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_DATABASE: audit_db
+      PG_USER: postgres
+      PG_PASSWORD: 12345
+    ports:
+      - "8185:8085"
+
 volumes:
   postgres_data:
